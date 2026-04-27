@@ -90,5 +90,14 @@ public class ProductController {
 	// PUT /products/{id}
 
 	// PUT /products/{id}/switchAvailable
+	@PutMapping("/{id}/switchAvailable")
+	public ResponseEntity<?> switchAvailable(@PathVariable Long id) {
+		try {
+			productService.switchAvailable(id);
+			return ResponseEntity.ok(new ApiResponse<>(true, null, "Product availability changed successfully."));
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, null, e.getMessage()));
+		}
+	}
 
 }
