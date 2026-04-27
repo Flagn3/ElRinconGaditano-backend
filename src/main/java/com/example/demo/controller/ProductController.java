@@ -30,4 +30,13 @@ public class ProductController {
 		return ResponseEntity.ok(new ApiResponse<>(true, products, "Products retrieved successfully."));
 	}
 
+	// GET /products/available
+	@GetMapping("/available")
+	public ResponseEntity<?> getAvailableProducts() {
+		List<Product> products = productService.getAvailable();
+		return ResponseEntity.ok(new ApiResponse<>(true, products, "Products retrieved successfully."));
+	}
+
+	
+
 }
