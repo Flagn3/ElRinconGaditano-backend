@@ -65,6 +65,16 @@ public class ProductController {
 	}
 
 	// POST /products
+	@PostMapping
+	public ResponseEntity<?> createProduct(@RequestBody Product product) {
+		try {
+			Product newProduct = productService.createProduct(product);
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(new ApiResponse<>(true, newProduct, "Product created successfully."));
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, null, e.getMessage()));
+		}
+	}
 
 	// DELETE /products/{id}
 	@DeleteMapping("/{id}")
