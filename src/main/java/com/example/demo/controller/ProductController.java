@@ -7,10 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.entity.Product;
 import com.example.demo.model.ApiResponse;
 import com.example.demo.service.ProductService;
@@ -88,6 +84,15 @@ public class ProductController {
 	}
 
 	// PUT /products/{id}
+	@PutMapping("/{id}")
+	public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+		try {
+			Product updatedProduct = productService.updateProduct(id, product);
+			return ResponseEntity.ok(new ApiResponse<>(true, updatedProduct, "Product updated successfully."));
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, null, e.getMessage()));
+		}
+	}
 
 	// PUT /products/{id}/switchAvailable
 	@PutMapping("/{id}/switchAvailable")
