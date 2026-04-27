@@ -37,6 +37,17 @@ public class ProductController {
 		return ResponseEntity.ok(new ApiResponse<>(true, products, "Products retrieved successfully."));
 	}
 
+	// GET /products/{id}
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getProductById(@PathVariable Long id) {
+		try {
+			Product product = productService.getById(id);
+			return ResponseEntity.ok(new ApiResponse<>(true, product, "Product retrieved successfully."));
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, null, e.getMessage()));
+		}
+	}
+
 	
 
 }
