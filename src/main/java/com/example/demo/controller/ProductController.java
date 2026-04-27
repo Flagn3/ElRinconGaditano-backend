@@ -48,6 +48,25 @@ public class ProductController {
 		}
 	}
 
-	
+	// GET /products/category/{category}
+
+	// GET /products/admin/category/{category}
+
+	// POST /products
+
+	// DELETE /products/{id}
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+		try {
+			productService.deleteProduct(id);
+			return ResponseEntity.ok(new ApiResponse<>(true, null, "Product deleted successfully."));
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, null, e.getMessage()));
+		}
+	}
+
+	// PUT /products/{id}
+
+	// PUT /products/{id}/switchAvailable
 
 }
