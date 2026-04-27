@@ -57,6 +57,12 @@ public class ProductController {
 	}
 
 	// GET /products/admin/category/{category}
+	@GetMapping("/admin/category/{category}")
+	public ResponseEntity<?> getByCategory(@PathVariable String category) {
+		List<Product> products = productService.getByCategory(category);
+		return ResponseEntity
+				.ok(new ApiResponse<>(true, products, "Products for category " + category + " retrieved."));
+	}
 
 	// POST /products
 
