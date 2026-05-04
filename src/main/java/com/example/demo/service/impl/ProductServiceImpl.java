@@ -44,12 +44,18 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product createProduct(Product product) {
+		if (product.getPrice() < 0) {
+			throw new IllegalArgumentException("Price can't be negative");
+		}
 		return productRepository.save(product);
 	}
 
 	@Override
 	public Product updateProduct(Long id, Product productData) {
 		Product product = getById(id);
+		if (productData.getPrice() < 0) {
+			throw new IllegalArgumentException("Price can't be negative");
+		}
 
 		product.setName(productData.getName());
 		product.setDescription(productData.getDescription());
