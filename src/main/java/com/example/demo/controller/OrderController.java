@@ -45,6 +45,15 @@ public class OrderController {
 	}
 
 	// GET /orders/{id}
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getOrderById(@PathVariable Long id) {
+		try {
+			Order order = orderService.getById(id);
+			return ResponseEntity.ok(new ApiResponse<>(true, order, "Order retrieved successfully."));
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, null, e.getMessage()));
+		}
+	}
 
 	// GET /orders/status/{status}
 
