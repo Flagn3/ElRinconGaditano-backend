@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,9 +37,14 @@ public class UserController {
 
 	// GET /users/{id}
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getUserById(@PathVariable Long id) {
+	public ResponseEntity<?> getUserById(@PathVariable Long id, Authentication authentication) {
 		try {
 			User user = userService.getUserById(id);
+			String email = authentication.getName();
+			if (!user.getEmail().equals(email)) {
+				return ResponseEntity.status(HttpStatus.FORBIDDEN)
+						.body(new ApiResponse<>(false, null, "You don't have permissions to access this profile."));
+			}
 			return ResponseEntity.ok(new ApiResponse<>(true, user, "User retrieved successfully"));
 		} catch (RuntimeException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, null, e.getMessage()));
@@ -80,8 +86,15 @@ public class UserController {
 
 	// PUT /users/{id}
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
+	public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request,
+			Authentication authentication) {
 		try {
+			User user = userService.getUserById(id);
+			String email = authentication.getName();
+			if (!user.getEmail().equals(email)) {
+				return ResponseEntity.status(HttpStatus.FORBIDDEN)
+						.body(new ApiResponse<>(false, null, "You don't have permissions to access this profile."));
+			}
 			User updateUser = userService.updateUser(id, request);
 			return ResponseEntity.ok(new ApiResponse<>(true, updateUser, "User updated successfully"));
 		} catch (RuntimeException e) {
