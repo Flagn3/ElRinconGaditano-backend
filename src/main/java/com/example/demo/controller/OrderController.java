@@ -56,6 +56,16 @@ public class OrderController {
 	}
 
 	// GET /orders/status/{status}
+	@GetMapping("/status/{status}")
+	public ResponseEntity<?> getOrdersByUser(@PathVariable String status) {
+		try {
+			List<Order> orders = orderService.getByStatus(status);
+			return ResponseEntity.ok(new ApiResponse<>(true, orders, "Orders retrieved successfully."));
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ApiResponse<>(false, null, e.getMessage()));
+		}
+	}
 
 	// POST /orders
 	@PostMapping
