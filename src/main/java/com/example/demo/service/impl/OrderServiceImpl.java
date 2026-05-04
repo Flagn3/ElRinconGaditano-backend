@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
 
 		Order order = new Order();
 		order.setDate(LocalDateTime.now());
-		order.setStatus("Pending");
+		order.setStatus("PENDING");
 
 		User user = userRepository.findById(request.getUserId())
 				.orElseThrow(() -> new RuntimeException("User not found"));
@@ -93,10 +93,10 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public void cancelOrder(Long id) {
 		Order order = getById(id);
-		if (!order.getStatus().equalsIgnoreCase("pending")) {
+		if (!order.getStatus().equalsIgnoreCase("PENDING")) {
 			throw new RuntimeException("Only pending orders can be cancelled");
 		}
-		order.setStatus("Cancelled");
+		order.setStatus("CANCELLED");
 		orderRepository.save(order);
 	}
 
