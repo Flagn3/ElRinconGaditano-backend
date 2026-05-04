@@ -89,6 +89,8 @@ public class ProductController {
 		try {
 			Product updatedProduct = productService.updateProduct(id, product);
 			return ResponseEntity.ok(new ApiResponse<>(true, updatedProduct, "Product updated successfully."));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, null, e.getMessage()));
 		} catch (RuntimeException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, null, e.getMessage()));
 		}
