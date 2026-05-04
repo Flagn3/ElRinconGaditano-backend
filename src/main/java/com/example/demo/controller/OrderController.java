@@ -97,5 +97,16 @@ public class OrderController {
 	}
 
 	// PUT /orders/{id}/cancel
+	@PutMapping("/{id}/cancel")
+	public ResponseEntity<?> cancelOrder(@PathVariable Long id) {
+		try {
+			orderService.cancelOrder(id);
+			return ResponseEntity.ok(new ApiResponse<>(true, null, "Order cancelled successfully."));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, null, e.getMessage()));
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(false, null, e.getMessage()));
+		}
+	}
 
 }

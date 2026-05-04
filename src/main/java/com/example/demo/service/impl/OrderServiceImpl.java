@@ -94,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
 	public void cancelOrder(Long id) {
 		Order order = getById(id);
 		if (!order.getStatus().equalsIgnoreCase("PENDING")) {
-			throw new RuntimeException("Only pending orders can be cancelled");
+			throw new IllegalArgumentException("Only pending orders can be cancelled");
 		}
 		order.setStatus("CANCELLED");
 		orderRepository.save(order);
