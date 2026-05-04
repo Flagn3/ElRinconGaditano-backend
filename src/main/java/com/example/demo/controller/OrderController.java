@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -98,8 +99,15 @@ public class OrderController {
 
 	// PUT /orders/{id}/cancel
 	@PutMapping("/{id}/cancel")
-	public ResponseEntity<?> cancelOrder(@PathVariable Long id) {
+	public ResponseEntity<?> cancelOrder(@PathVariable Long id, Authentication authentication) {
 		try {
+			Order order = orderService.getById(id);
+			String email = authentication.getName();
+			if (!order.getUser().getEmail().equals(email)) {
+				return ResponseEntity.status(HttpStatus.FORBIDDEN)
+						.body(new ApiResponse<>(false, null, "You don't have permissions to cancel this order."));
+			}
+
 			orderService.cancelOrder(id);
 			return ResponseEntity.ok(new ApiResponse<>(true, null, "Order cancelled successfully."));
 		} catch (IllegalArgumentException e) {
