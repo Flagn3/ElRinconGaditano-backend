@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.entity.Product;
 import com.example.demo.model.ApiResponse;
+import com.example.demo.model.CreateProduct;
 import com.example.demo.service.ProductService;
 
 @RestController
@@ -62,7 +63,7 @@ public class ProductController {
 
 	// POST /products
 	@PostMapping
-	public ResponseEntity<?> createProduct(@RequestBody Product product) {
+	public ResponseEntity<?> createProduct(@RequestBody CreateProduct product) {
 		try {
 			Product newProduct = productService.createProduct(product);
 			return ResponseEntity.status(HttpStatus.CREATED)
@@ -85,7 +86,7 @@ public class ProductController {
 
 	// PUT /products/{id}
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+	public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody CreateProduct product) {
 		try {
 			Product updatedProduct = productService.updateProduct(id, product);
 			return ResponseEntity.ok(new ApiResponse<>(true, updatedProduct, "Product updated successfully."));

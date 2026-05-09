@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 
 import com.example.demo.entity.Product;
+import com.example.demo.model.CreateProduct;
 
 public interface ProductService {
 
@@ -16,9 +17,9 @@ public interface ProductService {
 
 	Product getById(Long id);
 
-	Product createProduct(Product product);
+	Product createProduct(CreateProduct product);
 
-	Product updateProduct(Long id, Product product);
+	Product updateProduct(Long id, CreateProduct product);
 
 	void deleteProduct(Long id);
 
