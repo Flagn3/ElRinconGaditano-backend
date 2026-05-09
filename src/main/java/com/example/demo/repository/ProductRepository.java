@@ -11,10 +11,10 @@ import com.example.demo.entity.Product;
 @Repository("productRepository")
 public interface ProductRepository extends JpaRepository<Product, Serializable> {
 
-	List<Product> findByCategory(String category);
+	List<Product> findByCategoryName(String category);
 
 	List<Product> findByAvailableTrue();
 
-	List<Product> findByCategoryAndAvailableTrue(String category);
+	List<Product> findByCategoryNameAndAvailableTrue(String category);
 
 }

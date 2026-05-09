@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
+import com.example.demo.model.CreateProduct;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.ProductService;
 
@@ -17,6 +20,10 @@ public class ProductServiceImpl implements ProductService {
 	@Qualifier("productRepository")
 	private ProductRepository productRepository;
 
+	@Autowired
+	@Qualifier("categoryRepository")
+	private CategoryRepository categoryRepository;
+
 	@Override
 	public List<Product> getAllProducts() {
 		return productRepository.findAll();
@@ -24,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Product> getByCategory(String category) {
-		return productRepository.findByCategory(category);
+		return productRepository.findByCategoryName(category);
 	}
 
 	@Override
@@ -34,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Product> getAvailableByCategory(String category) {
-		return productRepository.findByCategoryAndAvailableTrue(category);
+		return productRepository.findByCategoryNameAndAvailableTrue(category);
 	}
 
 	@Override
@@ -43,24 +50,39 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Product createProduct(Product product) {
+	public Product createProduct(CreateProduct product) {
 		if (product.getPrice() < 0) {
 			throw new IllegalArgumentException("Price can't be negative");
 		}
-		return productRepository.save(product);
+
+		Category category = categoryRepository.findById(product.getCategoryId())
+				.orElseThrow(() -> new RuntimeException("Category not found"));
+
+		Product newProduct = new Product();
+		newProduct.setName(product.getName());
+		newProduct.setDescription(product.getDescription());
+		newProduct.setPrice(product.getPrice());
+		newProduct.setAvailable(product.isAvailable());
+		newProduct.setImage(product.getImage());
+		newProduct.setCategory(category);
+
+		return productRepository.save(newProduct);
 	}
 
 	@Override
-	public Product updateProduct(Long id, Product productData) {
+	public Product updateProduct(Long id, CreateProduct productData) {
 		Product product = getById(id);
 		if (productData.getPrice() < 0) {
 			throw new IllegalArgumentException("Price can't be negative");
 		}
 
+		Category category = categoryRepository.findById(productData.getCategoryId())
+				.orElseThrow(() -> new RuntimeException("Category not found"));
+
 		product.setName(productData.getName());
 		product.setDescription(productData.getDescription());
 		product.setPrice(productData.getPrice());
-		product.setCategory(productData.getCategory());
+		product.setCategory(category);
 
 		return productRepository.save(product);
 	}
