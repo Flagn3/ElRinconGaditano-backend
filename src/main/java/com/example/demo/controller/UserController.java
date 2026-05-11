@@ -53,8 +53,17 @@ public class UserController {
 
 	// DELETE /users
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+	public ResponseEntity<?> deleteUser(@PathVariable Long id, Authentication authentication) {
 		try {
+			User user = userService.getUserById(id);
+			String email = authentication.getName();
+
+			boolean isAdmin = authentication.getAuthorities().stream()
+					.anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+			if (!isAdmin && !user.getEmail().equals(email)) {
+				return ResponseEntity.status(HttpStatus.FORBIDDEN)
+						.body(new ApiResponse<>(false, null, "You don't have permissions to delete this account."));
+			}
 			userService.deleteUser(id);
 			return ResponseEntity.ok(new ApiResponse<>(true, null, "User deleted successfully."));
 		} catch (RuntimeException e) {

@@ -51,7 +51,7 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.PUT, "/orders/*/status").hasRole("ADMIN")
 						// users
 						.requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
-						.requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.DELETE, "/users/**").authenticated()
 						.requestMatchers(HttpMethod.PUT, "/users/*/activate").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.PUT, "/users/*/deactivate").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.GET, "/users/*").authenticated()
