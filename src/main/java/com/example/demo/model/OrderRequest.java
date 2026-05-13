@@ -15,4 +15,6 @@ public class OrderRequest {
 
 	private List<OrderLineRequest> items;
 
+	private String deliveryType;
+
 }

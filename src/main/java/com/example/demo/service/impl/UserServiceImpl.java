@@ -63,11 +63,4 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user);
 	}
 
-	@Override
-	public void addPointsToUser(Long id, int points) {
-		User user = getUserById(id);
-		user.setPoints(user.getPoints() + points);
-		userRepository.save(user);
-	}
-
 }

@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<Order> getByUser(Long userId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-		return orderRepository.findByUser(user);
+		return orderRepository.findByUserOrderByIdDesc(user);
 	}
 
 	@Override
@@ -72,9 +72,16 @@ public class OrderServiceImpl implements OrderService {
 			lines.add(line);
 			totalPrice += product.getPrice() * item.getAmount();
 		}
+		if (request.getDeliveryType() != null && request.getDeliveryType().equalsIgnoreCase("A domicilio")) {
+			totalPrice += 2.50;
+		}
 
 		order.setLines(lines);
 		order.setTotalPrice(totalPrice);
+
+		int points = (int) totalPrice;
+		user.setPoints(user.getPoints() + points);
+		userRepository.save(user);
 		return orderRepository.save(order);
 	}
 
@@ -96,13 +103,21 @@ public class OrderServiceImpl implements OrderService {
 		if (!order.getStatus().equalsIgnoreCase("PENDING")) {
 			throw new IllegalArgumentException("Only pending orders can be cancelled");
 		}
+
+		int points = order.getTotalPrice().intValue();
+		User user = order.getUser();
+		if (user != null) {
+			int finalPoints = user.getPoints() - points;
+			user.setPoints(Math.max(0, finalPoints));
+			userRepository.save(user);
+		}
 		order.setStatus("CANCELLED");
 		orderRepository.save(order);
 	}
 
 	@Override
 	public List<Order> getByStatus(String status) {
-		return orderRepository.findByStatus(status);
+		return orderRepository.findByStatusOrderByIdDesc(status);
 	}
 
 }
