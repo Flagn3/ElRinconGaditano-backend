@@ -12,8 +12,8 @@ import com.example.demo.entity.User;
 @Repository("orderRepository")
 public interface OrderRepository extends JpaRepository<Order, Serializable> {
 
-	List<Order> findByUser(User user);
+	List<Order> findByUserOrderByIdDesc(User user);
 
-	List<Order> findByStatus(String status);
+	List<Order> findByStatusOrderByIdDesc(String status);
 
 }

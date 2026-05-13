@@ -21,6 +21,4 @@ public interface UserService {
 
 	void deactivateUser(Long id);
 
-	void addPointsToUser(Long id, int points);
-
 }
