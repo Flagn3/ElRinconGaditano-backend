@@ -57,12 +57,12 @@ public class AuthService {
 		user.setDeleted(false);
 		user.setPoints(0);
 
-		User savedUser = userRepository.save(user);
+		return userRepository.save(user);
+	}
 
-		String verificationToken = tokenProvider.generateTokenFromEmail(savedUser.getEmail());
-		emailService.sendVerificationEmail(savedUser.getEmail(), savedUser.getName(), verificationToken);
-
-		return savedUser;
+	public void sendVerificationEmail(User user) {
+		String verificationToken = tokenProvider.generateTokenFromEmail(user.getEmail());
+		emailService.sendVerificationEmail(user.getEmail(), user.getName(), verificationToken);
 	}
 
 	public void verifyTokenAndActivateUser(String token) {
