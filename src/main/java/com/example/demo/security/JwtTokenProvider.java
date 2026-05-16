@@ -46,4 +46,26 @@ public class JwtTokenProvider {
         }
         return false;
     }
+    
+    public String generateTokenFromEmail(String email) {
+    	Date now = new Date();
+    	Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+    	
+    	return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
+    
+    public String getEmailFromJWT(String token) {
+    	Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
 }
