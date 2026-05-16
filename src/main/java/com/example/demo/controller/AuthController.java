@@ -4,7 +4,6 @@ import com.example.demo.entity.User;
 import com.example.demo.model.ApiResponse;
 import com.example.demo.model.RegisterRequest;
 import com.example.demo.service.AuthService;
-import com.example.demo.service.EmailService;
 import com.example.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,21 +79,6 @@ public class AuthController {
 							+ "  <p style='font-size: 18px; color: #333;'>" + e.getMessage() + "</p>"
 							+ "  <p style='font-size: 14px; color: #666;'>Por favor, intenta registrarte de nuevo o solicita asistencia.</p>"
 							+ "</div>");
-		}
-	}
-
-	@PostMapping("/send-verification")
-	public ResponseEntity<?> sendVerification(@RequestBody Map<String, String> request) {
-		try {
-			String email = request.get("email");
-			User user = userService.getUserByEmail(email);
-
-			authService.sendVerificationEmail(user);
-
-			return ResponseEntity.ok(new ApiResponse<>(true, null, "Verification email sent successfully"));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ApiResponse<>(false, null, "Error sending email: " + e.getMessage()));
 		}
 	}
 }
