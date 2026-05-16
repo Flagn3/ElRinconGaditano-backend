@@ -61,4 +61,24 @@ public class AuthController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, null, e.getMessage()));
 		}
 	}
+
+	@GetMapping("/verify")
+	public ResponseEntity<?> verifyAccount(@RequestParam("token") String token) {
+		try {
+			authService.verifyTokenAndActivateUser(token);
+			return ResponseEntity.ok(
+					"<div style='text-align: center; font-family: Arial, sans-serif; margin-top: 100px; padding: 20px;'>"
+							+ "  <h1 style='color: #FB8C00; font-size: 32px;'>¡Cuenta verificada con éxito!</h1>"
+							+ "  <p style='font-size: 18px; color: #333;'>Tu cuenta en El Rincón Gaditano ha sido activada correctamente.</p>"
+							+ "  <p style='font-size: 16px; color: #666;'>Ya puedes iniciar sesión en la aplicación.</p>"
+							+ "</div>");
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+					"<div style='text-align: center; font-family: Arial, sans-serif; margin-top: 100px; padding: 20px;'>"
+							+ "  <h1 style='color: #D32F2F; font-size: 32px;'>Error de Verificación</h1>"
+							+ "  <p style='font-size: 18px; color: #333;'>" + e.getMessage() + "</p>"
+							+ "  <p style='font-size: 14px; color: #666;'>Por favor, intenta registrarte de nuevo o solicita asistencia.</p>"
+							+ "</div>");
+		}
+	}
 }

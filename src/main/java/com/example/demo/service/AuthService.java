@@ -23,6 +23,8 @@ public class AuthService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private JwtTokenProvider tokenProvider;
+	@Autowired
+	private EmailService emailService;
 
 	public String login(String email, String password) {
 
@@ -31,6 +33,9 @@ public class AuthService {
 
 		if (user.isDeleted() || !user.isActivated()) {
 			throw new RuntimeException("User is deleted or deactivated");
+		}
+		if (!user.isVerified()) {
+			throw new RuntimeException("Please, verify your email before logging in");
 		}
 
 		Authentication authentication = authenticationManager
@@ -47,11 +52,28 @@ public class AuthService {
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setRole("ROLE_USER"); // Default role
-		user.setVerified(true); // cambiar cuando implemente verificacion por correo
+		user.setVerified(false);
 		user.setActivated(true);
 		user.setDeleted(false);
 		user.setPoints(0);
-		return userRepository.save(user);
+
+		User savedUser = userRepository.save(user);
+
+		String verificationToken = tokenProvider.generateTokenFromEmail(savedUser.getEmail());
+		emailService.sendVerificationEmail(savedUser.getEmail(), savedUser.getName(), verificationToken);
+
+		return savedUser;
+	}
+
+	public void verifyTokenAndActivateUser(String token) {
+		try {
+			String email = tokenProvider.getEmailFromJWT(token);
+			User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+			user.setVerified(true);
+			userRepository.save(user);
+		} catch (Exception e) {
+			throw new RuntimeException("The link is invalid or has expired");
+		}
 	}
 
 }
