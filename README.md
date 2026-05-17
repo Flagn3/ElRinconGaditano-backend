@@ -867,7 +867,6 @@ Cambia la disponibilidad de un producto existente.
 *   **`404 Not Found` (Producto no existe)**
 ---
 
-AAAAAAAAAAAAAAAAAAAAAAAAAAA
 ## :package: 5. Pedidos (`/orders`)
 
 Gestión de los pedidos del sistema.
