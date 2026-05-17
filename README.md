@@ -5,6 +5,11 @@ Esta API REST ha sido desarrollada utilizando **Java y Spring Boot**, implementa
 Esta API REST se encuentra desplegada en Render, por lo que para utilizarla únicamente habría que usar esta url: `https://rincongaditano-backend.onrender.com` y llamar a los endpoints que se indican en la sección inferior.
 
 ---
+## :gear: Usuarios de prueba para probar la API
+
+* **Administrador (ROLE_ADMIN):** email: `admin@admin.com`  |  password: `12345678`
+* **Usuarios (ROLE_USER):** email: `flavio@gmail.com` / `pepe@gmail.com` / `maria@gmail.com`  |  password: `12345`
+---
 
 ## :book: Documentación de la API
 
